@@ -16,6 +16,7 @@ bool ligado(string arq){
     while(getline(input_file, leitura)){
         resultado.push_back(leitura);
     };
+	input_file.close();
 
 	for(auto confere : resultado){
 		if(strstr(confere.c_str(),ip.c_str()) > 0) return aux=0;
@@ -27,7 +28,7 @@ bool ligado(string arq){
 int main(){
 	bool removido;
 	string leitura,teste, abrir, entrada, saida;
-	list <string> lista;
+	string lista[_MAX_IPS_];
 	removido=0;entrada = "lista.txt";saida = "resultado.txt";
 	ifstream input_file(entrada);
 	ofstream output_file;
@@ -35,6 +36,7 @@ int main(){
 	while(getline(input_file, leitura)){
         lista.push_back(leitura);
     };
+	input_file.close();
 
 	for(auto ip : lista){
 		teste="ping -n 1 -i 150 " + ip + " > " + saida;
@@ -43,13 +45,12 @@ int main(){
 		if(ligado(saida)){
 			abrir="\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" " + ip;
 			system(abrir.c_str());
-			ip.erase();
+			ip.remove();
 			removido=1;
 		}
     }
 
 	if (removido){
-		input_file.close();
 		system("del /f lista.txt");
 		output_file.open(entrada);
 		for(auto ip : lista)
