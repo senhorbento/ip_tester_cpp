@@ -25,6 +25,7 @@ bool ligado(string arq){
 }
 
 int main(){
+	bool removido=0;
 	string leitura, teste, abrir, entrada = "lista.txt", saida = "resultado.txt";
 	list <string> lista;
 	ifstream input_file(entrada);
@@ -40,17 +41,18 @@ int main(){
 		if(ligado(saida)==1){
 			abrir="\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" " + ip;
 			system(abrir.c_str());
-			lista.remove();
+			ip.erase();
+			removido=1;
 		}
     }
 
-	/*if (removido > 0){
+	if (removido){
 		system("rm lista.txt");
 		output_file.open(entrada);
 		for(auto ip : lista)
 				output_file << ip << endl;
 		output_file.close();
-	}*/
+	}
 
 	return 0;
 }
