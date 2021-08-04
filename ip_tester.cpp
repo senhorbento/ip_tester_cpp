@@ -11,7 +11,7 @@ bool ligado(string arq){
 	string leitura, ip;
 	list <string> resultado;
 	ifstream input_file(arq);
-	ip="192.168.88.1";
+	ip="Host de destino inacess";
 
     while(getline(input_file, leitura)){
         resultado.push_back(leitura);
@@ -28,7 +28,7 @@ bool ligado(string arq){
 int main(){
 	bool removido;
 	string leitura,teste, abrir, entrada, saida;
-	string lista[_MAX_IPS_];
+	list <string> lista, ligados;
 	removido=0;entrada = "lista.txt";saida = "resultado.txt";
 	ifstream input_file(entrada);
 	ofstream output_file;
@@ -40,15 +40,21 @@ int main(){
 
 	for(auto ip : lista){
 		teste="ping -n 1 -i 150 " + ip + " > " + saida;
-		cout << teste << endl;
+		cout << "Pingando para " << ip;
         system(teste.c_str());
 		if(ligado(saida)){
+			cout << " - Ligado!" << endl;
 			abrir="\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" " + ip;
 			system(abrir.c_str());
-			ip.remove();
+			ligados.push_back(ip);
 			removido=1;
 		}
+		else cout << " - Desligado!" << endl;
     }
+
+	for(auto ip : ligados){
+		lista.remove(ip);
+	}
 
 	if (removido){
 		system("del /f lista.txt");
