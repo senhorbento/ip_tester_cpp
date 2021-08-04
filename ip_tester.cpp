@@ -18,27 +18,29 @@ bool ligado(string arq){
     };
 
 	for(auto confere : resultado){
-		if(strstr(confere.c_str(),ip.c_str()) > 0) return aux=1;
+		if(strstr(confere.c_str(),ip.c_str()) > 0) return aux=0;
 	}
 
-	return aux=0;
+	return aux=1;
 }
 
 int main(){
-	bool removido=0;
-	string leitura, teste, abrir, entrada = "lista.txt", saida = "resultado.txt";
+	bool removido;
+	string leitura,teste, abrir, entrada, saida;
 	list <string> lista;
+	removido=0;entrada = "lista.txt";saida = "resultado.txt";
 	ifstream input_file(entrada);
 	ofstream output_file;
 
-    while(getline(input_file, leitura)){
+	while(getline(input_file, leitura)){
         lista.push_back(leitura);
     };
+
 	for(auto ip : lista){
 		teste="ping -n 1 -i 150 " + ip + " > " + saida;
 		cout << teste << endl;
         system(teste.c_str());
-		if(ligado(saida)==1){
+		if(ligado(saida)){
 			abrir="\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" " + ip;
 			system(abrir.c_str());
 			ip.erase();
@@ -47,7 +49,8 @@ int main(){
     }
 
 	if (removido){
-		system("rm lista.txt");
+		input_file.close();
+		system("del /f lista.txt");
 		output_file.open(entrada);
 		for(auto ip : lista)
 				output_file << ip << endl;
