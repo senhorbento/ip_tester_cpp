@@ -52,11 +52,10 @@ int main(){
 		else cout << " - Desligado!" << endl;
     }
 
-	for(auto ip : ligados){
-		lista.remove(ip);
-	}
-
 	if (removido){
+		for(auto ip : ligados)
+		lista.remove(ip);
+		ligados.clear();
 		system("del /f lista.txt");
 		output_file.open(entrada);
 		for(auto ip : lista)
