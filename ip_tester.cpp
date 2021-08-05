@@ -8,19 +8,19 @@ using namespace std;
 
 bool ligado(string arq){
 	bool aux;
-	string leitura, ip;
+	string leitura, desligado;
 	list <string> resultado;
 	ifstream input_file(arq);
-	ip="Host de destino inacess";
+	desligado="Host de destino inacess";
 
     while(getline(input_file, leitura)){
         resultado.push_back(leitura);
     };
 	input_file.close();
 
-	for(auto confere : resultado){
-		if(strstr(confere.c_str(),ip.c_str()) > 0) return aux=0;
-	}
+	for(auto confere : resultado)
+		if(strstr(confere.c_str(),desligado.c_str()) > 0) 
+			return aux=0;
 
 	return aux=1;
 }
