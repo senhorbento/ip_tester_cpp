@@ -47,19 +47,20 @@ string obterIP(string s){
 }
 
 int main(){
-	int qtd;
+	int qtd, n;
 	bool removido;
-	string leitura,teste, abrir, entrada, saida,ip;
+	string leitura, teste, abrir, entrada, saida,ip;
 	list <string> lista, ligados;
-	qtd=-1; entrada = "lista.txt"; saida = "resultado.txt";
+	n=0; entrada = "lista.txt"; saida = "resultado.txt";
 	ifstream input_file(entrada);
 	ofstream output_file;
 
 	system("cls");
-	while(qtd!=0){
-		qtd=1; removido=0;
+	do{
+		qtd=0;removido=0;n++;
 		while(getline(input_file, leitura)){
 			lista.push_back(leitura);
+			qtd++;
 		};
 		input_file.close();
 
@@ -70,23 +71,24 @@ int main(){
 			if(ligado(saida)){
 				abrir="\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" " + ip;
 				system(abrir.c_str());
-				ligados.push_back(ip);
+				ligados.push_back(linha);
 				removido=1;
+				qtd--;
 			}
-			qtd++;
 		}
 
-		if (removido){
-			for(auto ip : ligados) lista.remove(ip);
+		if(removido){
+			for(auto linha : ligados) lista.remove(linha);
 			system("del lista.txt && del resultado.txt");
 			output_file.open(entrada);
-			for(auto ip : lista) output_file << ip << endl;
+			for(auto linha : lista) output_file << linha << endl;
 			output_file.close();
 			ligados.clear();
 		}
-		system("pause");
 		cout << "A lista foi pesquisada " << n << " vezes" << endl;
-	}
+	}while(qtd>0);
+	system("cls");
+	cout << "Fim de lista!" << endl;
 
 	return 0;
 }
