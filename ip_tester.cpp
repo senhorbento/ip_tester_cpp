@@ -79,18 +79,36 @@ void Pause(int v){
 	}
 }
 
+void Remover(string v){
+	string arquivo;
+	arquivo = "del " + v;
+	system(arquivo.c_str());
+}
+
+void Pingar(string ip, string saida){
+	string ping;
+	ping = "ping -n 1 -i 150 " + ip + " > " + saida;
+	system(ping.c_str());
+}
+
+void Abrir(string ip){
+	string abrir;
+	abrir = "start chrome " + ip;
+	system(abrir.c_str());
+}
+
 int main() {
 	int qtd, n;
 	bool removido;
 	string leitura, teste, abrir, entrada, saida, ip;
 	list <string> lista, ligados;
-	n = 0; entrada = "lista.txt"; saida = "resultado.txt";
+	n=0; entrada="lista.txt"; saida="resultado.txt";
 	ifstream input_file(entrada);
 	ofstream output_file;
 
 	LimparTela();
 	do {
-		qtd = 0; removido = 0; n++;
+		qtd=0; removido=0; n++;
 		while (getline(input_file, leitura)) {
 			lista.push_back(leitura);
 			qtd++;
@@ -100,11 +118,9 @@ int main() {
 		for (auto linha : lista) {
 			ip = obterIP(linha);
 			cout << "Testando o ip " << ip << endl;
-			teste = "ping -n 1 -i 150 " + ip + " > " + saida;
-			system(teste.c_str());
+			Pingar(ip, saida);
 			if (ligado(saida)) {
-				abrir = "start chrome " + ip;
-				system(abrir.c_str());
+				Abrir(ip);
 				ligados.push_back(linha);
 				removido = 1;
 				qtd--;
@@ -116,16 +132,17 @@ int main() {
 
 		if (removido) {
 			for (auto linha : ligados) lista.remove(linha);
-			system("del lista.txt && del resultado.txt");
+			Remover(entrada);
+			Remover(saida);
 			output_file.open(entrada);
 			for (auto linha : lista) output_file << linha << endl;
 			output_file.close();
 			ligados.clear();
 		}
-	} while (qtd > 0);
+	}while (qtd > 0);
 	LimparTela();
+	Remover(entrada);
 	cout << "Fim de lista!" << endl;
 	Pause(2);
-
 	return 0;
 }
