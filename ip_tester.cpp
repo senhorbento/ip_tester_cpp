@@ -100,7 +100,7 @@ void Abrir(string ip){
 int main() {
 	int qtd, n;
 	bool removido;
-	string leitura, teste, abrir, entrada, saida, ip;
+	string leitura, entrada, saida, ip;
 	list <string> lista, ligados;
 	n=0; entrada="lista.txt"; saida="resultado.txt";
 	ifstream input_file(entrada);
