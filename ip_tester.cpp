@@ -9,10 +9,11 @@ using namespace std;
 
 bool ligado(string arq) {
 	bool aux;
-	string leitura, inativo;
+	string leitura, inativo, inacess;
 	list <string> resultado;
 	ifstream input_file(arq);
-	inativo = "Host de destino inacess";
+	inacess = "Host de destino inacess";
+	inativo = "Esgotado o tempo limite do pedido.";
 
 	while (getline(input_file, leitura)) {
 		resultado.push_back(leitura);
@@ -20,7 +21,7 @@ bool ligado(string arq) {
 	input_file.close();
 
 	for (auto confere : resultado)
-		if (strstr(confere.c_str(), inativo.c_str()) > 0)
+		if (strstr(confere.c_str(), inativo.c_str()) > 0 || strstr(confere.c_str(), inacess.c_str()) > 0 )
 			return aux = 0;
 
 	return aux = 1;
@@ -128,6 +129,7 @@ int main() {
 				LimparTela();
 				break;
 			}
+			LimparTela();
 		}
 
 		if (removido) {
