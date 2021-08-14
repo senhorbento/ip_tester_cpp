@@ -9,11 +9,14 @@ using namespace std;
 
 bool ligado(string arq) {
 	bool aux;
-	string leitura, inativo, inacess;
+	string leitura, inativo, inacess, EnInacess, EnInativo;
 	list <string> resultado;
 	ifstream input_file(arq);
 	inacess = "Host de destino inacess";
 	inativo = "Esgotado o tempo limite do pedido.";
+	EnInacess = "Destination host unreachable.";
+	EnInativo = "Request timed out.";
+	
 
 	while (getline(input_file, leitura)) {
 		resultado.push_back(leitura);
@@ -21,7 +24,8 @@ bool ligado(string arq) {
 	input_file.close();
 
 	for (auto confere : resultado)
-		if (strstr(confere.c_str(), inativo.c_str()) > 0 || strstr(confere.c_str(), inacess.c_str()) > 0 )
+		if (strstr(confere.c_str(), EnInativo.c_str()) > 0 || strstr(confere.c_str(), EnInacess.c_str()) > 0 ||
+			      strstr(confere.c_str(), inativo.c_str()) > 0 || strstr(confere.c_str(), inacess.c_str()) > 0)
 			return aux = 0;
 
 	return aux = 1;
@@ -41,38 +45,27 @@ string obterIP(string s) {
 		}
 		s = m.suffix().str();
 	}
-	for(i = 0; i < qtd; i++)
+	for (i = 0; i < qtd; i++)
 		if (strlen(lista[i].c_str()) > 7)
-			if (lista[i] != "172.16.0.2" &&
-				lista[i] != "172.16.8.2" &&
-				lista[i] != "172.16.16.2" &&
-				lista[i] != "172.16.24.2" &&
-				lista[i] != "172.16.32.2" &&
-				lista[i] != "172.16.40.2" &&
-				lista[i] != "172.16.48.2" &&
-				lista[i] != "172.16.56.2" &&
-				lista[i] != "172.16.64.2" &&
-				lista[i] != "172.16.72.2" &&
-				lista[i] != "172.16.80.2" &&
-				lista[i] != "172.16.88.2" &&
-				lista[i] != "172.16.96.2" &&
-				lista[i] != "172.16.104.2" &&
-				lista[i] != "172.16.112.2" &&
-				lista[i] != "172.16.120.2" &&
-				lista[i] != "172.16.128.2" &&
-				lista[i] != "172.16.136.2" &&
-				lista[i] != "172.16.144.2" &&
-				lista[i] != "172.16.152.2" &&
-				lista[i] != "172.16.160.2") 
-					return lista[i];
-
+			if (lista[i] != "172.16.0.2" && lista[i] != "172.16.8.2" &&
+				lista[i] != "172.16.16.2" && lista[i] != "172.16.24.2" &&				
+				lista[i] != "172.16.32.2" && lista[i] != "172.16.40.2" &&
+				lista[i] != "172.16.48.2" && lista[i] != "172.16.56.2" &&
+				lista[i] != "172.16.64.2" && lista[i] != "172.16.72.2" &&
+				lista[i] != "172.16.80.2" && lista[i] != "172.16.88.2" &&
+				lista[i] != "172.16.96.2" && lista[i] != "172.16.104.2" &&
+				lista[i] != "172.16.112.2" && lista[i] != "172.16.120.2" &&
+				lista[i] != "172.16.128.2" && lista[i] != "172.16.136.2" &&
+				lista[i] != "172.16.144.2" && lista[i] != "172.16.152.2" &&
+				lista[i] != "172.16.160.2")
+				return lista[i];
 }
 
 void LimparTela() {
 	system("cls");
 }
 
-void Pause(int v){
+void Pause(int v) {
 	char a;
 	switch (v) {
 	case 1: cout << endl << "Pressione uma tecla para remover da lista e continuar!" << endl; a = getchar(); break;
@@ -80,19 +73,19 @@ void Pause(int v){
 	}
 }
 
-void Remover(string v){
+void Remover(string v) {
 	string arquivo;
 	arquivo = "del " + v;
 	system(arquivo.c_str());
 }
 
-void Pingar(string ip, string saida){
+void Pingar(string ip, string saida) {
 	string ping;
 	ping = "ping -n 1 -i 150 " + ip + " > " + saida;
 	system(ping.c_str());
 }
 
-void Abrir(string ip){
+void Abrir(string ip) {
 	string abrir;
 	abrir = "start chrome " + ip;
 	system(abrir.c_str());
@@ -103,22 +96,30 @@ int main() {
 	bool removido;
 	string leitura, entrada, saida, ip;
 	list <string> lista, ligados;
-	n=0; entrada="lista.txt"; saida="resultado.txt";
-	ifstream input_file(entrada);
+	entrada = "lista.txt"; saida = "resultado.txt";
+	ifstream input_file;
 	ofstream output_file;
 
 	LimparTela();
 	do {
-		qtd=0; removido=0; n++;
-		while (getline(input_file, leitura)) {
-			lista.push_back(leitura);
-			qtd++;
-		};
-		input_file.close();
+		n = 0; qtd = 0; removido = 0;
+
+		input_file.open(entrada);
+		if (input_file.is_open()) {
+			while (!input_file.eof()) {
+				getline(input_file, leitura);
+				if (leitura != "\0") {
+					lista.push_back(leitura);
+					qtd++;
+				}
+			}
+			input_file.close();
+		}
 
 		for (auto linha : lista) {
+			n++;
 			ip = obterIP(linha);
-			cout << "Testando o ip " << ip << endl;
+			cout << n << ". Testando o ip " << ip << endl;
 			Pingar(ip, saida);
 			if (ligado(saida)) {
 				Abrir(ip);
@@ -141,7 +142,8 @@ int main() {
 			output_file.close();
 			ligados.clear();
 		}
-	}while (qtd > 0);
+		lista.clear();
+	} while (qtd != 0);
 	LimparTela();
 	Remover(entrada);
 	cout << "Fim de lista!" << endl;
