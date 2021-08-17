@@ -129,7 +129,7 @@ int main() {
 			n++;
 			ip = obterIP(linha, ignore);
 			if (ip == "ERROR") {
-				cout << "Foi encontrado um erro no elemento de posição " << n << ", favor verificar a lista = )" << endl << endl;
+				cout << "Foi encontrado um erro no elemento de posicao " << n << ", favor verificar a lista =)" << endl << endl;
 				qtd = -1;
 				break;
 			}
