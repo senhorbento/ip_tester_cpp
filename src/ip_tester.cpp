@@ -48,7 +48,7 @@ string obterIP(string s, list <string> ignorar) {
 		if (strlen(lista[i].c_str()) > 7){
 			positive = -1;
 			for(auto ignore : ignorar){
-				if (ignore != "\0" && lista[i] == ignore) positive++;
+				if (lista[i] == ignore) positive++;
 			}
 			if(positive < 0)
 				return lista[i];
