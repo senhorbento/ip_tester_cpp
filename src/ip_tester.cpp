@@ -65,10 +65,10 @@ void LimparTela() {
 }
 
 void Pause(int v) {
-	char a;
 	switch (v) {
-	case 1: cout << endl << "Pressione uma tecla para remover da lista e continuar!" << endl; a = getchar(); break;
-	case 2: cout << endl << "Pressione uma tecla para finalizar o programa!" << endl; a = getchar(); break;
+	case 1: cout << endl << "Pressione uma tecla para remover da lista e continuar!" << endl; getchar(); break;
+	case 2: cout << endl << "Pressione uma tecla para finalizar o programa!" << endl; getchar(); break;
+	case 3: cout << endl << "Finalizando o programa devido ao erro!" << endl; getchar(); break;
 	}
 }
 
@@ -128,18 +128,25 @@ int main() {
 		for (auto linha : lista) {
 			n++;
 			ip = obterIP(linha, ignore);
-			cout << n << ". Testando o ip " << ip << endl;
-			Pingar(ip, _SAIDA_);
-			if (ligado(_SAIDA_)) {
-				Abrir(ip);
-				ligados.push_back(linha);
-				removido = 1;
-				qtd--;
-				Pause(1);
-				LimparTela();
+			if (ip == "ERROR") {
+				cout << "Foi encontrado um erro no elemento de posição " << n << ", favor verificar a lista = )" << endl << endl;
+				qtd = -1;
 				break;
 			}
-			LimparTela();
+			else {
+				cout << n << ". Testando o ip " << ip << endl;
+				Pingar(ip, _SAIDA_);
+				if (ligado(_SAIDA_)) {
+					Abrir(ip);
+					ligados.push_back(linha);
+					removido = 1;
+					qtd--;
+					Pause(1);
+					LimparTela();
+					break;
+				}
+				LimparTela();
+			}
 		}
 
 		if (removido) {
@@ -152,10 +159,14 @@ int main() {
 			ligados.clear();
 		}
 		lista.clear();
-	} while (qtd != 0);
-	LimparTela();
-	Remover(_ENTRADA_);
-	cout << "Fim de lista!" << endl;
-	Pause(2);
+	} while (qtd > 0);
+	if (qtd == -1) 
+		Pause(3);
+	else {
+		LimparTela();
+		Remover(_ENTRADA_);
+		cout << "Fim de lista!" << endl;
+		Pause(2);
+	}
 	return 0;
 }
