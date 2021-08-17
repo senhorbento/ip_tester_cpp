@@ -49,7 +49,7 @@ string obterIP(string s, list <string> ignorar) {
 		s = m.suffix().str();
 	}
 	for (i = 0; i < qtd; i++)
-		if (strlen(lista[i].c_str()) > 7) {
+		if (strlen(lista[i].c_str()) > 6) {
 			positive = -1;
 			for (auto ignore : ignorar)
 				if (lista[i] == ignore) positive++;
