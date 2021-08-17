@@ -7,6 +7,10 @@
 
 using namespace std;
 
+#define _ENTRADA_ "txt\\lista.txt"
+#define _SAIDA_ "txt\\resultado.txt"
+#define _IGNORE_ "txt\\ignore.txt"
+
 bool ligado(string arq) {
 	bool aux;
 	string leitura, inativo, inacess, EnInacess, EnInativo;
@@ -24,7 +28,7 @@ bool ligado(string arq) {
 
 	for (auto confere : resultado)
 		if (strstr(confere.c_str(), EnInativo.c_str()) > 0 || strstr(confere.c_str(), EnInacess.c_str()) > 0 ||
-			      strstr(confere.c_str(), inativo.c_str()) > 0 || strstr(confere.c_str(), inacess.c_str()) > 0)
+			strstr(confere.c_str(), inativo.c_str()) > 0 || strstr(confere.c_str(), inacess.c_str()) > 0)
 			return aux = 0;
 
 	return aux = 1;
@@ -45,14 +49,15 @@ string obterIP(string s, list <string> ignorar) {
 		s = m.suffix().str();
 	}
 	for (i = 0; i < qtd; i++)
-		if (strlen(lista[i].c_str()) > 7){
+		if (strlen(lista[i].c_str()) > 7) {
 			positive = -1;
-			for(auto ignore : ignorar){
+			for (auto ignore : ignorar)
 				if (lista[i] == ignore) positive++;
-			}
-			if(positive < 0)
+	
+			if (positive < 0)
 				return lista[i];
 		}
+	return "ERROR";
 }
 
 void LimparTela() {
@@ -88,19 +93,17 @@ void Abrir(string ip) {
 int main() {
 	int qtd, n;
 	bool removido;
-	string leitura, entrada, saida, ignorar, ip;
+	string leitura, ip;
 	list <string> lista, ligados, ignore;
-	entrada = "txt\\lista.txt"; saida = "txt\\resultado.txt"; ignorar ="txt\\ignore.txt";
 	ifstream input_file;
 	ofstream output_file;
 
-	input_file.open(ignorar);
+	input_file.open(_IGNORE_);
 	if (input_file.is_open()) {
 		while (!input_file.eof()) {
 			getline(input_file, leitura);
 			if (leitura != "\0") {
 				ignore.push_back(leitura);
-				qtd++;
 			}
 		}
 		input_file.close();
@@ -110,7 +113,7 @@ int main() {
 	do {
 		n = 0; qtd = 0; removido = 0;
 
-		input_file.open(entrada);
+		input_file.open(_ENTRADA_);
 		if (input_file.is_open()) {
 			while (!input_file.eof()) {
 				getline(input_file, leitura);
@@ -126,8 +129,8 @@ int main() {
 			n++;
 			ip = obterIP(linha, ignore);
 			cout << n << ". Testando o ip " << ip << endl;
-			Pingar(ip, saida);
-			if (ligado(saida)) {
+			Pingar(ip, _SAIDA_);
+			if (ligado(_SAIDA_)) {
 				Abrir(ip);
 				ligados.push_back(linha);
 				removido = 1;
@@ -141,9 +144,9 @@ int main() {
 
 		if (removido) {
 			for (auto linha : ligados) lista.remove(linha);
-			Remover(entrada);
-			Remover(saida);
-			output_file.open(entrada);
+			Remover(_ENTRADA_);
+			Remover(_SAIDA_);
+			output_file.open(_ENTRADA_);
 			for (auto linha : lista) output_file << linha << endl;
 			output_file.close();
 			ligados.clear();
@@ -151,7 +154,7 @@ int main() {
 		lista.clear();
 	} while (qtd != 0);
 	LimparTela();
-	Remover(entrada);
+	Remover(_ENTRADA_);
 	cout << "Fim de lista!" << endl;
 	Pause(2);
 	return 0;
